@@ -1,0 +1,34 @@
+description: use this script to debug the code
+
+target:
+  service: amlk8s
+  name: itp-v100-scus
+  vc: speech-itp-gutenberg
+
+environment:
+  image: zhyyao/wenet_itp:cuda_11.3
+
+code:
+  # local directory of the code. this will be uploaded to the server.
+  # $CONFIG_DIR is expanded to the directory of this config file
+  local_dir: $CONFIG_DIR/../..
+
+# data:
+#   data upload is not required for this example
+storage:
+  data_blob:
+    storage_account_name: tsprmblob01scus
+    container_name: data
+    mount_dir: /datablob
+  model_blob:
+    storage_account_name: tsstd01scus
+    container_name: models
+    mount_dir: /modelblob
+
+jobs:
+- name: debug2
+  command:
+    - source activate speech_transducers
+    - bash script/train.sh
+  sku: G8
+  preemptible: False
